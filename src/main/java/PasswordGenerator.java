@@ -53,19 +53,17 @@ class PasswordGenerator {
     }
 
     private void addLetters() {
-//        for (char uc = 'A'; uc <= 'Z'; uc++) {
-//            letters.add(uc);
-//        }
+        for (char uc = 'A'; uc <= 'Z'; uc++) {
+            letters.add(uc);
+        }
         for (char lc = 'a'; lc <= 'z'; lc++) {
             letters.add(lc);
         }
     }
 
     private String mixUpPassword(String orderedPassword) {
-        char[] passwordArray = orderedPassword.toCharArray();
         List<Character> currentPassword = new ArrayList<>();
-
-        for (char character : passwordArray) {
+        for (char character : orderedPassword.toCharArray()) {
             currentPassword.add(character);
         }
 

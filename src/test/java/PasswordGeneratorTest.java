@@ -3,6 +3,7 @@
  */
 
 import org.assertj.core.api.Assertions;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -10,15 +11,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class PasswordGeneratorTest {
 
-    PasswordGenerator passwordGenerator = new PasswordGenerator();
+    private PasswordGenerator passwordGenerator = new PasswordGenerator();
 
     @Test
     public void generatesBasicPasswordOf8Characters() {
-
-//        System.out.println(passwordGenerator.specialCharacter.toString());
-//        System.out.println(passwordGenerator.numbersList.toString());
-//        System.out.println(passwordGenerator.letters.toString());
-
         Assertions.assertThat(passwordGenerator
                 .generatePassword(8, 0, 0).length())
                 .isGreaterThanOrEqualTo(8);
@@ -35,10 +31,8 @@ public class PasswordGeneratorTest {
                     counter++;
                 }
         }
-        System.out.println(password);
         Assertions.assertThat(counter).isEqualTo(2);
     }
-
 
     @Test
     public void passwordContainsNumber() {
@@ -51,20 +45,18 @@ public class PasswordGeneratorTest {
                     counter++;
                 }
         }
-        System.out.println(password);
         Assertions.assertThat(counter).isEqualTo(2);
     }
 
+    @Ignore
     @Test
     public void checkSecretPassword() {
 
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         boolean isTrue = false;
         String secretPassword = passwordGenerator.generatePassword(3, 1, 1);
-//        String secretPassword = "b+1";
 
         while (!isTrue) {
-
             if (bCryptPasswordEncoder.matches(secretPassword,
                     "$2a$10$N43LdqU9b1ZMuZM2KiBnIeaXiPqxYcTEVoMFabb9ZV2jfG82jupD6")) {
                 System.out.println(secretPassword);
@@ -73,9 +65,8 @@ public class PasswordGeneratorTest {
                 System.out.println(secretPassword);
                 secretPassword = passwordGenerator.generatePassword(3, 1, 1);
             }
-
         }
-//        passwordGenerator.findSecretPassword("$2a$10$gufewbBitAXuxqKesQD6Wu5H8SmqkvGlo1w5yBnnEN9fBgmwx9lWy");
+
         assertThat(bCryptPasswordEncoder.matches(secretPassword,
                 "$2a$10$N43LdqU9b1ZMuZM2KiBnIeaXiPqxYcTEVoMFabb9ZV2jfG82jupD6"))
                 .isTrue();

@@ -55,31 +55,24 @@ public class PasswordGenerator {
 
         StringBuilder password;
 
-        for (int i = 0; i < alphabet.size(); i++) {
-            password = new StringBuilder();
-            password.append(alphabet.get(i));
-
-            for (int j = 0; j < specialChars.size(); j++) {
-                password.append(specialChars.get(j));
-                password.append(number);
-            }
+        for (Character letter : alphabet) {
+            password = new StringBuilder(letter.toString());
 
             if (bCryptPasswordEncoder.matches(password, encodedPassword)) {
                 return password.toString();
             }
+
         }
 
-
         throw new RuntimeException("Password could not be cracked");
-
     }
 
-    public String passwordCracker(String encodedPassword) {
+    public String passwordCracker(String encodedPassword, int length, int amountOfSpecialChars, int amountOfNumbers) {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         String guess;
 
         do {
-            guess = buildPassword(encodedPassword,3,1,1);
+            guess = buildPassword(encodedPassword,length,amountOfSpecialChars,amountOfNumbers);
             System.out.println(guess);
         }
         while (!bCryptPasswordEncoder.matches(guess, encodedPassword));

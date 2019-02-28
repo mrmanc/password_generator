@@ -6,17 +6,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class PasswordGeneratorTest {
     private PasswordGenerator testSubject;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Before
     public void beforeEach() {
         testSubject = new PasswordGenerator();
+        bCryptPasswordEncoder = new BCryptPasswordEncoder();
     }
 
     @Test
     public void checkSecretPassword() {
-        String secretPassword = testSubject.passwordCracker("$2a$10$N43LdqU9b1ZMuZM2KiBnIeaXiPqxYcTEVoMFabb9ZV2jfG82jupD6");
+        String secretPassword = testSubject.passwordCracker("$2a$10$N43LdqU9b1ZMuZM2KiBnIeaXiPqxYcTEVoMFabb9ZV2jfG82jupD6", 3, 1, 1);
 
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         assertThat(bCryptPasswordEncoder.matches(secretPassword,
                 "$2a$10$N43LdqU9b1ZMuZM2KiBnIeaXiPqxYcTEVoMFabb9ZV2jfG82jupD6"))
                 .isTrue();
@@ -45,5 +46,12 @@ public class PasswordGeneratorTest {
         assertThat(password.length()).isGreaterThanOrEqualTo(20);
         assertThat(password.replaceAll("[^\\d.]", "").length()).isEqualTo(6);
         assertThat(password.replaceAll("[A-Za-z0-9]", "").length()).isEqualTo(5);
+    }
+
+    @Test
+    public void shouldCrackPasswordOfLengthOneWithOnlyLetters() {
+        String encodedPassword = bCryptPasswordEncoder.encode("t");
+
+        assertThat(testSubject.passwordCracker(encodedPassword, 1, 0, 0)).isEqualTo("t");
     }
 }

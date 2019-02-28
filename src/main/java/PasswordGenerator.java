@@ -35,11 +35,11 @@ public class PasswordGenerator {
             password.append(alphabet.get(random.nextInt(alphabet.size())));
         }
 
-        for (int i = 0; i < amountOfNumbers; i++) {
+        for (int currentAmountOfNumbers = 0; currentAmountOfNumbers < amountOfNumbers; currentAmountOfNumbers++) {
             password.insert(random.nextInt(password.length() - 1), random.nextInt(10));
         }
 
-        for (int i = 0; i< amountOfSpecialChars; i++) {
+        for (int currentAmountOfSpecialChars = 0; currentAmountOfSpecialChars < amountOfSpecialChars; currentAmountOfSpecialChars++) {
             password.insert(random.nextInt(password.length() - 1), specialChars.get(random.nextInt(specialChars.size())));
         }
 
@@ -47,42 +47,39 @@ public class PasswordGenerator {
         return password.toString();
     }
 
-    public String buildPassword(int minimumLength, int maximumLength, int amountOfSpecialChars, int amountOfNumbers) {
+    public String buildPassword(String encodedPassword, int length, int amountOfSpecialChars, int amountOfNumbers) {
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         List<Character> specialChars = Arrays.asList('£', '$', '!', '#', '@', '+', '-', '/', '*');
         List<Character> alphabet = Arrays.asList('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z');
-        StringBuilder password = new StringBuilder();
-        char number = 0;
+        int number = 0;
 
-        while (password.length() < minimumLength) {
-            password.append(alphabet.get(random.nextInt(alphabet.size())));
-        }
+        StringBuilder password;
 
-        for (int i = 0; i < amountOfNumbers; i++) {
-            number = String.valueOf(random.nextInt(9)).charAt(0);
-            password.setCharAt(random.nextInt(2), number);
-        }
+        for (int i = 0; i < alphabet.size(); i++) {
+            password = new StringBuilder();
+            password.append(alphabet.get(i));
 
-        for (int i = 0; i < amountOfSpecialChars; i++) {
-            int randomIndex = random.nextInt(2);
-
-            if (password.charAt(randomIndex) != number) {
-                password.setCharAt(randomIndex, specialChars.get(random.nextInt(specialChars.size())));
+            for (int j = 0; j < specialChars.size(); j++) {
+                password.append(specialChars.get(j));
+                password.append(number);
             }
 
-
-
+            if (bCryptPasswordEncoder.matches(password, encodedPassword)) {
+                return password.toString();
+            }
         }
 
-        return password.toString();
+
+        throw new RuntimeException("Password could not be cracked");
+
     }
 
     public String passwordCracker(String encodedPassword) {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         String guess;
 
-
         do {
-            guess = buildPassword(3,3,1,1);
+            guess = buildPassword(encodedPassword,3,1,1);
             System.out.println(guess);
         }
         while (!bCryptPasswordEncoder.matches(guess, encodedPassword));

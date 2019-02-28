@@ -78,12 +78,14 @@ public class PasswordGenerator {
 
     public String passwordCracker(String encodedPassword) {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        String guess = buildPassword(3, 3, 1, 1);
+        String guess;
 
-        while(!bCryptPasswordEncoder.matches(guess, encodedPassword)) {
+
+        do {
+            guess = buildPassword(3,3,1,1);
             System.out.println(guess);
-            guess = buildPassword(3, 3, 1, 1);
         }
+        while (!bCryptPasswordEncoder.matches(guess, encodedPassword));
 
         return guess;
     }

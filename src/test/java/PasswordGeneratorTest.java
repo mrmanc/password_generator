@@ -29,22 +29,21 @@ public class PasswordGeneratorTest {
 
     @Test
     public void correctAmountOfNumbers() {
-        String result = testSubject.buildPassword(10, 0, 3);
-        assertThat(result.replaceAll("[^\\d.]", "").length()).isEqualTo(3);
+        String password = testSubject.buildPassword(10, 0, 3);
+        assertThat(password.replaceAll("[^\\d.]", "").length()).isEqualTo(3);
     }
 
     @Test
     public void correctAmountOfSpecialChars() {
-        String result = testSubject.buildPassword(10, 3, 0);
-        assertThat(result.replaceAll("[A-Za-z]", "").length()).isEqualTo(3);
+        String password = testSubject.buildPassword(10, 3, 0);
+        assertThat(password.replaceAll("[A-Za-z]", "").length()).isEqualTo(3);
     }
 
     @Test
     public void correctEverything() {
-        String result = testSubject.buildPassword(20, 5, 6);
-        assertThat(result.length()).isGreaterThanOrEqualTo(20);
-        assertThat(result.replaceAll("[^\\d.]", "").length()).isEqualTo(6);
-        assertThat(result.replaceAll("[A-Za-z0-9]", "").length()).isEqualTo(5);
+        String password = testSubject.buildPassword(20, 5, 6);
+        assertThat(password.length()).isGreaterThanOrEqualTo(20);
+        assertThat(password.replaceAll("[^\\d.]", "").length()).isEqualTo(6);
+        assertThat(password.replaceAll("[A-Za-z0-9]", "").length()).isEqualTo(5);
     }
-
 }
